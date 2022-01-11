@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurm-master-deployment-s9
+  labels:
+    app: slurm-master-s9
+    group: slurm-s9
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      group: slurm-s9
+      app: slurm-master-s9
+  template:
+    metadata:
+      name: slurm-master-pod-s9
+      labels:
+        app: slurm-master-s9
+        group: slurm-s9
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - b5r13u15
+            topologyKey: "kubernetes.io/hostname"
+      hostname: slurm-master-s9
+      containers:
+        - name: master-container-s9
+          image: 041012/master:v18
+          imagePullPolicy: IfNotPresent

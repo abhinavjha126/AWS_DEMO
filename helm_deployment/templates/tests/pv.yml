@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: slurm-local-pv-s{{ .Values.number }}
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: lustre-local-storage1
+  local:
+    path: /lustre/s{{ .Values.number }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - b5r13u15

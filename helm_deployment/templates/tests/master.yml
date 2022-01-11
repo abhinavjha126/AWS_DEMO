@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurm-master-deployment-s{{ .Values.number }}
+  labels:
+    app: slurm-master-s{{ .Values.number }}
+    group: slurm-s{{ .Values.number }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      group: slurm-s{{ .Values.number }}
+      app: slurm-master-s{{ .Values.number }}
+  template:
+    metadata:
+      name: slurm-master-pod-s{{ .Values.number }}
+      labels:
+        app: slurm-master-s{{ .Values.number }}
+        group: slurm-s{{ .Values.number }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - b5r13u15
+            topologyKey: "kubernetes.io/hostname"
+      hostname: slurm-master-s{{ .Values.number }}
+      volumes:
+        - name: slurm-lustre-vol-s{{ .Values.number }}
+          persistentVolumeClaim:
+            claimName: lustre-local-storage-claim-s{{ .Values.number }}
+      containers:
+        - name: master-container-s{{ .Values.number }}
+          image: 041012/master:v18
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: "/lustre/s{{ .Values.number }}"
+              name: slurm-lustre-vol-s{{ .Values.number }}

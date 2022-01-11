@@ -1,0 +1,44 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: slurm-worker-1-deployment-s{{ .Values.number }}
+  labels:
+    app: slurm-worker-1-s{{ .Values.number }}
+    group: slurm-s{{ .Values.number }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurm-worker-1-s{{ .Values.number }}
+      group: slurm-s{{ .Values.number }}
+  template:
+    metadata:
+      name: slurm-worker-1-pod-s{{ .Values.number }}
+      labels:
+        app: slurm-worker-1-s{{ .Values.number }}
+        group: slurm-s{{ .Values.number }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - b5r13u15
+    spec:
+      hostname: slurm-worker-1-s{{ .Values.number }}
+      volumes:
+        - name: slurm-lustre-vol-s{{ .Values.number }}
+          persistentVolumeClaim:
+            claimName: lustre-local-storage-claim-s{{ .Values.number }}
+      containers:
+        - name: worker-1-container-s{{ .Values.number }}
+          image: 041012/node:v16
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: "/lustre/s{{ .Values.number }}"
+              name: slurm-lustre-vol-s{{ .Values.number }}
+

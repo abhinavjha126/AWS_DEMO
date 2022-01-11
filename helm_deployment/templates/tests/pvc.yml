@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: lustre-local-storage-claim-s{{ .Values.number }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: lustre-local-storage1
+  resources:
+    requests:
+      storage: 5Gi
