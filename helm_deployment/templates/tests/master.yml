@@ -3,20 +3,20 @@ kind: Deployment
 metadata:
   name: slurm-master-deployment-s{{ .Values.number }}
   labels:
-    app: slurm-master-s{{ .Values.number }}
-    group: slurm-s{{ .Values.number }}
+    app: slurm-master
+    group: slurm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      group: slurm-s{{ .Values.number }}
-      app: slurm-master-s{{ .Values.number }}
+      group: slurm
+      app: slurm-master
   template:
     metadata:
       name: slurm-master-pod-s{{ .Values.number }}
       labels:
-        app: slurm-master-s{{ .Values.number }}
-        group: slurm-s{{ .Values.number }}
+        app: slurm-master
+        group: slurm
     spec:
       affinity:
         podAntiAffinity:
@@ -28,7 +28,7 @@ spec:
                 values:
                 - b5r13u15
             topologyKey: "kubernetes.io/hostname"
-      hostname: slurm-master-s{{ .Values.number }}
+      hostname: slurm-master
       volumes:
         - name: slurm-lustre-vol-s{{ .Values.number }}
           persistentVolumeClaim:
