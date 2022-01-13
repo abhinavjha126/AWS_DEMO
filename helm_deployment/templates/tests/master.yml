@@ -35,7 +35,7 @@ spec:
             claimName: lustre-local-storage-claim-s{{ .Values.number }}
       containers:
         - name: master-container-s{{ .Values.number }}
-          image: 041012/master:v18
+          image: 041012/abhinav-master:v1
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: "/lustre/s{{ .Values.number }}"
