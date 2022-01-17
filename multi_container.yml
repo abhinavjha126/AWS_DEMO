@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: slurm-master-deployment-s{{ .Values.number }}
+  name: slurm-master-deployment
   labels:
     app: slurm-master
     group: slurm
@@ -13,7 +13,7 @@ spec:
       app: slurm-master
   template:
     metadata:
-      name: slurm-master-pod-s{{ .Values.number }}
+      name: slurm-master-pod
       labels:
         app: slurm-master
         group: slurm
@@ -30,13 +30,19 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       hostname: slurm-master
       volumes:
-        - name: slurm-lustre-vol-s{{ .Values.number }}
+        - name: slurm-lustre-vol-s1
           persistentVolumeClaim:
-            claimName: lustre-local-storage-claim-s{{ .Values.number }}
+            claimName: lustre-local-storage-claim-s1
       containers:
-        - name: master-container-s{{ .Values.number }}
-          image: 041012/abhinav-master:v5
+        - name: master-container
+          image: 041012/abhinav-master:v1
           imagePullPolicy: IfNotPresent
           volumeMounts:
-            - mountPath: "/lustre/s{{ .Values.number }}"
-              name: slurm-lustre-vol-s{{ .Values.number }}
+            - mountPath: "/lustre/s1"
+              name: slurm-lustre-vol-s1
+        - name: worker-container
+          image: 041012/abhinav-node:v1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: "/lustre/s1"
+              name: slurm-lustre-vol-s1

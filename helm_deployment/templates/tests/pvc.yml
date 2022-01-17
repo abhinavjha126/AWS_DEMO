@@ -5,7 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: lustre-local-storage1
+  storageClassName: storage
   resources:
     requests:
       storage: 5Gi

@@ -1,9 +1,0 @@
-- hosts: master 
-  user: sdp
-  become: yes
-  connection: ssh
-  vars_files:
-     - /home/ubuntu/K8S-FINAL-INTEL/CLUSTER/helm_deployment/values.yaml
-  tasks:
-     - name: Update
-       command: sudo mkdir /lustre/s{{number}}

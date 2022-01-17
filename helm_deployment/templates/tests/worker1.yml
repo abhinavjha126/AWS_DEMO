@@ -1,21 +1,21 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: slurm-master-deployment-s{{ .Values.number }}
+  name: slurm-worker-1-deployment-s{{ .Values.number }}
   labels:
-    app: slurm-master
+    app: slurm-worker-1
     group: slurm
 spec:
   replicas: 1
   selector:
     matchLabels:
+      app: slurm-worker-1
       group: slurm
-      app: slurm-master
   template:
     metadata:
-      name: slurm-master-pod-s{{ .Values.number }}
+      name: slurm-worker-1-pod-s{{ .Values.number }}
       labels:
-        app: slurm-master
+        app: slurm-worker-1
         group: slurm
     spec:
       affinity:
@@ -26,16 +26,16 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - ip-172-31-19-24
-            topologyKey: "kubernetes.io/hostname"
-      hostname: slurm-master
+                - b5r13u15
+    spec:
+      hostname: slurm-worker-1
       volumes:
         - name: slurm-lustre-vol-s{{ .Values.number }}
           persistentVolumeClaim:
             claimName: lustre-local-storage-claim-s{{ .Values.number }}
       containers:
-        - name: master-container-s{{ .Values.number }}
-          image: 041012/abhinav-master:v5
+        - name: worker-1-container-s{{ .Values.number }}
+          image: 041012/abhinav-node:v5
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: "/lustre/s{{ .Values.number }}"

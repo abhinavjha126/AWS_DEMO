@@ -8,7 +8,7 @@ spec:
   accessModes:
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: lustre-local-storage1
+  storageClassName: storage
   local:
     path: /lustre/s{{ .Values.number }}
   nodeAffinity:
@@ -18,4 +18,4 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - b5r13u15
+          - ip-172-31-23-193
