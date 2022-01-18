@@ -26,7 +26,7 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - b5r13u15
+                - ip-172-31-21-140
     spec:
       hostname: slurm-worker-1
       volumes:

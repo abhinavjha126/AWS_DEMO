@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyterlab
+  labels:
+    app: slurm-jlab
+    group: slurm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurm-jlab
+      group: slurm
+  template:
+    metadata:
+      name: jupyterlab
+      labels:
+        app: slurm-jlab
+        group: slurm
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - ip-172-31-21-140
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: jupyterlab
+          image: 041012/abhinav-jupyter:v5
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8888
+          command:
+            - /bin/bash
+            - -c
+            - |
+               jupyter lab --LabApp.token='password' --LabApp.ip='0.0.0.0' --LabApp.allow_root=True
+          volumeMounts:
+            - mountPath: "/lustre/s{{ .Values.number }}"
+              name: slurm-lustre-vol-s{{ .Values.number }}
+          lifecycle:
+              postStart:
+                exec:
+                   command: ["/bin/sh", "-c", "service munge start"]
+      volumes:
+        - name: slurm-lustre-vol-s{{ .Values.number }}
+          persistentVolumeClaim:
+            claimName: lustre-local-storage-claim-s{{ .Values.number }}      
+      restartPolicy: Always
+---
